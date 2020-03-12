@@ -33,11 +33,14 @@ class _BaseAddress extends _BaseIPAddress {
 
   bool operator <=(other) => _ip >= other._ip;
 
+  /// Returns an integer representation of an IP address.
   int toInt() => _ip;
 }
 
 class _BaseNetwork extends _BaseIPAddress {
   int _ip;
+
+  /// The prefix length of the network.
   int prefixlen;
 
   @override
@@ -53,22 +56,44 @@ abstract class _Address {
 }
 
 abstract class _Network {
+  /// The network address for the network.
   _BaseAddress get networkAddress;
+
+  /// The netmask address for the network.
   _BaseAddress get netmask;
+
+  /// The hostmask address for the network.
   _BaseAddress get hostmask;
+
+  /// The broadcast address for the network.
   _BaseAddress get broadcastAddress;
+
+  /// Returns an iterator over the usable hosts in the network.
   Iterable<_BaseAddress> get hosts;
+
+  /// Returns an iterator over the all address in the network.
   Iterable<_BaseAddress> get addresses;
+
+  /// The total number of addresses in the network.
   int get numAddresses;
+
+  /// A string resresentation of the netwrok, with the mask in prefix length.
   String get withPrefixlen;
+
+  /// A string representation of the network, with the mask in net mask notation.
   String get withNetmask;
+
+  /// A string representation of the network, with the mask in host mask notation.
   String get withHostmask;
   @override
   String toString();
 }
 
 mixin _BaseV4 {
+  /// The appropriate version number: 4 for IPv4, 6 for IPv6.
   int get version => 4;
+
+  /// The total number of bits in the address representation for this version: 32 for IPv4, 128 for IPv6.
   int get maxPrefixlen => 32;
   int get _allOne => 4294967295;
 
@@ -177,7 +202,9 @@ mixin _BaseV4 {
 class _BaseIPv4Address = _BaseAddress with _BaseV4;
 class _BaseIPv4Network = _BaseNetwork with _BaseV4;
 
+/// A class for representing and manipulating single IPv4 Addresses.
 class IPv4Address extends _BaseIPv4Address implements _Address {
+  /// Creates a new IPv4Address.
   IPv4Address(String addr) {
     if (addr == null) {
       throw AddressValueError('Address cannot be empty');
@@ -188,6 +215,7 @@ class IPv4Address extends _BaseIPv4Address implements _Address {
     _ip = _ipIntFromString(addr);
   }
 
+  /// Crates a new IPv4Address from integer.
   IPv4Address.fromInt(int addr) {
     if (addr == null) {
       throw AddressValueError('Address cannot be empty');
@@ -200,6 +228,7 @@ class IPv4Address extends _BaseIPv4Address implements _Address {
   String toString() => _stringFromIpInt(_ip);
 }
 
+/// A class for representing and manipulating 32-bit IPv4 network + addresses.
 class IPv4Network extends _BaseIPv4Network implements _Network {
   @override
   IPv4Address networkAddress;
@@ -229,6 +258,7 @@ class IPv4Network extends _BaseIPv4Network implements _Network {
   @override
   String get withHostmask => '${networkAddress}/${hostmask}';
 
+  /// Creates a new IPv4Network.
   IPv4Network(String addr) {
     var ap = _splitAddrPrefix(addr);
     networkAddress = IPv4Address(ap[0]);

@@ -39,15 +39,13 @@ class _BaseAddress extends _BaseIPAddress {
 
 class _BaseNetwork extends _BaseIPAddress {
   int _ip;
-
-  /// The prefix length of the network.
-  int prefixlen;
+  int _prefixlen;
 
   @override
-  bool operator ==(other) => _ip == other._ip && prefixlen == other.prefixlen;
+  bool operator ==(other) => _ip == other._ip && _prefixlen == other.prefixlen;
 
   @override
-  int get hashCode => _ip ^ prefixlen;
+  int get hashCode => _ip ^ _prefixlen;
 }
 
 abstract class _Address {
@@ -73,6 +71,9 @@ abstract class _Network {
 
   /// Returns an iterator over the all address in the network.
   Iterable<_BaseAddress> get addresses;
+
+  /// The prefix length of the network.
+  int get prefixlen;
 
   /// The total number of addresses in the network.
   int get numAddresses;
@@ -231,9 +232,9 @@ class IPv4Address extends _BaseIPv4Address implements _Address {
 /// A class for representing and manipulating 32-bit IPv4 network + addresses.
 class IPv4Network extends _BaseIPv4Network implements _Network {
   @override
-  IPv4Address networkAddress;
+  IPv4Address get networkAddress => IPv4Address.fromInt(_ip);
   @override
-  IPv4Address netmask;
+  IPv4Address get netmask => _makeNetmask(_prefixlen);
   @override
   IPv4Address get hostmask => IPv4Address.fromInt(netmask.toInt() ^ _allOne);
   @override
@@ -250,6 +251,8 @@ class IPv4Network extends _BaseIPv4Network implements _Network {
         return IPv4Address.fromInt(x);
       }).toList();
   @override
+  int get prefixlen => _prefixlen;
+  @override
   int get numAddresses => broadcastAddress.toInt() - networkAddress.toInt() + 1;
   @override
   String get withPrefixlen => '${networkAddress}/${prefixlen}';
@@ -261,10 +264,8 @@ class IPv4Network extends _BaseIPv4Network implements _Network {
   /// Creates a new IPv4Network.
   IPv4Network(String addr) {
     var ap = _splitAddrPrefix(addr);
-    networkAddress = IPv4Address(ap[0]);
-    _ip = networkAddress.toInt();
-    prefixlen = _makePrefix(ap[1]);
-    netmask = _makeNetmask(prefixlen);
+    _ip = _ipIntFromString(ap[0]);
+    _prefixlen = _makePrefix(ap[1]);
   }
 
   @override

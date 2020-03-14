@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'dart:math';
-import 'package:ipaddress/src/exception.dart';
-import 'package:ipaddress/src/utils.dart';
+import 'package:ipaddr/src/exception.dart';
+import 'package:ipaddr/src/utils.dart';
 
 class _BaseIPAddress extends Object {
   List<String> _splitAddrPrefix(String address) {

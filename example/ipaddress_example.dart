@@ -1,4 +1,4 @@
-import 'package:ipaddress/ipaddress.dart' as ipaddress;
+import 'package:ipaddr/ipaddr.dart' as ipaddress;
 
 void main() {
   var address = ipaddress.IPv4Address('192.168.0.1');

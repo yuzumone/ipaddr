@@ -1,5 +1,5 @@
-import 'package:ipaddress/ipaddress.dart';
-import 'package:ipaddress/src/exception.dart';
+import 'package:ipaddr/ipaddr.dart';
+import 'package:ipaddr/src/exception.dart';
 import 'package:test/test.dart';
 
 void main() {

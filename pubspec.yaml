@@ -1,6 +1,6 @@
 name: ipaddress
 description: This library is used to create/poke/manipulate IPv4 and IPv6 addresses and networks.
-version: 0.0.1
+version: 0.1.0
 homepage: https://github.com/yuzumone/ipaddress
 
 environment:

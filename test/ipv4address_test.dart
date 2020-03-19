@@ -27,6 +27,16 @@ void main() {
       expect(IPv4Address(ipStr) == IPv4Address(ipStr), true);
     });
 
+    test('OK: plus test', () {
+      expect((IPv4Address('192.168.10.9') + 1) == IPv4Address('192.168.10.10'),
+          true);
+    });
+
+    test('OK: minus test', () {
+      expect((IPv4Address('192.168.10.11') - 1) == IPv4Address('192.168.10.10'),
+          true);
+    });
+
     test('NG: include subnet', () {
       var fault = '192.168.10.10/24';
       expect(
@@ -54,6 +64,16 @@ void main() {
     test('NG: address over 255', () {
       var fault = '100.10.10.256';
       expect(() => IPv4Address(fault), throwsA(TypeMatcher<ValueError>()));
+    });
+
+    test('OK: plus over 4294967295', () {
+      var addr = IPv4Address('255.255.255.255');
+      expect(() => addr + 100, throwsA(TypeMatcher<AddressValueError>()));
+    });
+
+    test('OK: minus under 0', () {
+      var addr = IPv4Address('0.0.0.0');
+      expect(() => addr - 100, throwsA(TypeMatcher<AddressValueError>()));
     });
   });
 }

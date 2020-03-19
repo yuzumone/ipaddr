@@ -1,10 +1,11 @@
 import 'package:ipaddr/ipaddr.dart' as ipaddr;
 
 void main() {
-  var address = ipaddr.IPv4Address('192.168.0.1');
-  print(address); // 102.168.0.10
+  var address = ipaddr.IPv4Address('192.168.10.10');
+  print(address); // 192.168.10.10
   address = ipaddr.IPv4Address.fromInt(3232238090);
-  print(address); // 102.168.0.10
+  print(address); // 192.168.10.10
+  print(address + 1); // 192.168.10.11
 
   var network = ipaddr.IPv4Network('192.168.0.0/30');
   print(network); // 192.168.0.0/30

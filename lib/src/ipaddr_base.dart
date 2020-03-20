@@ -232,10 +232,10 @@ class IPv4Address extends _BaseIPv4Address implements _Address {
   String toString() => _stringFromIpInt(_ip);
 
   @override
-  _BaseAddress operator +(int other) => IPv4Address.fromInt(_ip + other);
+  IPv4Address operator +(int other) => IPv4Address.fromInt(_ip + other);
 
   @override
-  _BaseAddress operator -(int other) => IPv4Address.fromInt(_ip - other);
+  IPv4Address operator -(int other) => IPv4Address.fromInt(_ip - other);
 }
 
 /// A class for representing and manipulating 32-bit IPv4 network + addresses.

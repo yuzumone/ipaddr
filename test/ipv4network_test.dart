@@ -61,6 +61,18 @@ void main() {
       expect(IPv4Network(ipStr) == IPv4Network(ipStr), true);
     });
 
+    test('OK: strict option is false', () {
+      expect(
+          IPv4Network('192.168.10.1/30', strict: false) ==
+              IPv4Network('192.168.10.0/30'),
+          true);
+    });
+
+    test('NG: strict option is true and network address is not supplied.', () {
+      expect(() => IPv4Network('192.168.10.1/30', strict: true),
+          throwsA(TypeMatcher<ValueError>()));
+    });
+
     test('NG: exclude subnet', () {
       var fault = '192.168.10.10';
       expect(

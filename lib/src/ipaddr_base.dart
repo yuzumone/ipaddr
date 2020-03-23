@@ -271,10 +271,19 @@ class IPv4Network extends _BaseIPv4Network implements _Network {
   String get withHostmask => '${networkAddress}/${hostmask}';
 
   /// Creates a new IPv4Network.
-  IPv4Network(String addr) {
+  /// Throw ValueError when strict opstion is true and network address is not supplied.
+  IPv4Network(String addr, {bool strict = true}) {
     var ap = _splitAddrPrefix(addr);
     _ip = _ipIntFromString(ap[0]);
     _prefixlen = _makePrefix(ap[1]);
+    var packed = networkAddress.toInt();
+    if (packed & netmask.toInt() != packed) {
+      if (strict) {
+        throw ValueError('${addr} has host bits set.');
+      } else {
+        _ip = packed & netmask.toInt();
+      }
+    }
   }
 
   @override

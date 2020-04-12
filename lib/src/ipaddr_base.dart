@@ -93,6 +93,23 @@ abstract class _Network {
   String toString();
 }
 
+abstract class _Interface {
+  /// The address without network information.
+  _BaseAddress get ip;
+
+  /// The network this interface belongs to.
+  _BaseNetwork get network;
+
+  /// A string resresentation of the netwrok, with the mask in prefix length.
+  String get withPrefixlen;
+
+  /// A string representation of the network, with the mask in net mask notation.
+  String get withNetmask;
+
+  /// A string representation of the network, with the mask in host mask notation.
+  String get withHostmask;
+}
+
 mixin _BaseV4 {
   /// The appropriate version number: 4 for IPv4, 6 for IPv6.
   int get version => 4;
@@ -205,6 +222,7 @@ mixin _BaseV4 {
 
 class _BaseIPv4Address = _BaseAddress with _BaseV4;
 class _BaseIPv4Network = _BaseNetwork with _BaseV4;
+class _BaseIPv4Interface = _BaseAddress with _BaseV4;
 
 /// A class for representing and manipulating single IPv4 Addresses.
 class IPv4Address extends _BaseIPv4Address implements _Address {
@@ -284,6 +302,34 @@ class IPv4Network extends _BaseIPv4Network implements _Network {
         _ip = packed & netmask.toInt();
       }
     }
+  }
+
+  @override
+  String toString() => withPrefixlen;
+}
+
+/// A class for representing and manipulating single IPv4 Addresses + Networks.
+class IPv4Interface extends _BaseIPv4Interface implements _Interface {
+  String _address;
+  int _prefixlen;
+  @override
+  IPv4Address get ip => IPv4Address.fromInt(_ip);
+  @override
+  IPv4Network get network =>
+      IPv4Network('${_address}/${_prefixlen}', strict: false);
+  @override
+  String get withHostmask => '${ip}/${network.hostmask}';
+  @override
+  String get withNetmask => '${ip}/${network.netmask}';
+  @override
+  String get withPrefixlen => '${ip}/${_prefixlen}';
+
+  /// Creates a new IPv4Interface.
+  IPv4Interface(String addr) {
+    var ap = _splitAddrPrefix(addr);
+    _ip = _ipIntFromString(ap[0]);
+    _address = _stringFromIpInt(_ip);
+    _prefixlen = _makePrefix(ap[1]);
   }
 
   @override

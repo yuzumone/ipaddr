@@ -21,4 +21,12 @@ void main() {
   print(network.withPrefixlen); // 192.168.0.0/30
   print(network.withNetmask); // 192.168.0.0/255.255.255.255.252
   print(network.withHostmask); // 192.168.0.0/0.0.0.3
+
+  var interface = ipaddr.IPv4Interface('192.168.10.10/24');
+  print(interface); // 192.168.10.10/24
+  print(interface.ip); // 192.168.10.10
+  print(interface.network); // 192.168.10.10/24
+  print(interface.withHostmask); // 192.168.10.10/0.0.0.255
+  print(interface.withNetmask); // 192.168.10.10/255.255.255.0
+  print(interface.withPrefixlen); // 192.168.10.10/24
 }

@@ -1,5 +1,6 @@
 ## 0.1.2-dev
 - Add strict option to network object
+- Add IPv4Interface
 
 ## 0.1.1
 - Add plus and minus operator

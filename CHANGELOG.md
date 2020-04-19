@@ -1,4 +1,4 @@
-## 0.1.2-dev
+## 0.1.2
 - Add strict option to network object
 - Add IPv4Interface
 

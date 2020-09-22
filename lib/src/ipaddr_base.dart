@@ -226,9 +226,170 @@ mixin _BaseV4 {
   }
 }
 
+mixin _BaseV6 {
+  /// The appropriate version number: 4 for IPv4, 6 for IPv6.
+  int get version => 6;
+
+  /// The total number of bits in the address representation for this version: 32 for IPv4, 128 for IPv6.
+  int get maxPrefixlen => 128;
+  BigInt get _allOne => BigInt.from(2).pow(128) - BigInt.one;
+  int get _hextetCount => 8;
+
+  void _checkIntAddress(BigInt ipInt) {
+    if (ipInt < BigInt.zero || ipInt > _allOne) {
+      throw AddressValueError(
+          '${ipInt} (0 > addr => $_allOne) is permitted as an IPv6 address');
+    }
+  }
+
+  BigInt _parseHextet(String hextetStr) {
+    if (hextetStr.length > 4) {
+      throw ValueError('At most 4 characters permitted in $hextetStr');
+    }
+    var result = int.tryParse(hextetStr, radix: 16);
+    if (result == null) {
+      throw ValueError('Only hex digits permitted in $hextetStr');
+    }
+    return BigInt.from(result);
+  }
+
+  BigInt _ipIntFromString(String addr) {
+    if (addr == null) {
+      throw AddressValueError('Address cannot be empty');
+    }
+    var _minParts = 3;
+    var parts = addr.split(':');
+    if (parts.length < _minParts) {
+      throw AddressValueError('At least $_minParts parts expected in $addr');
+    }
+
+    var _maxParts = 9;
+    if (parts.length > _maxParts) {
+      throw AddressValueError(
+          'At most ${_maxParts - 1} colons permitted in $addr');
+    }
+
+    var skipIndex;
+    range(1, parts.length - 1).forEach((x) {
+      if (parts[x].isEmpty) {
+        if (skipIndex != null) {
+          throw AddressValueError('At most one "::" permitted in $addr');
+        }
+        skipIndex = x;
+      }
+    });
+
+    var partsHi;
+    var partsLo;
+    var partsSkipped;
+    if (skipIndex != null) {
+      partsHi = skipIndex;
+      partsLo = parts.length - skipIndex - 1;
+      if (parts[0].isEmpty) {
+        partsHi -= 1;
+        if (partsHi != 0) {
+          throw AddressValueError(
+              'Leading ":" only permitted as part of "::" in $addr');
+        }
+      }
+      if (parts[parts.length - 1].isEmpty) {
+        partsLo -= 1;
+        if (partsLo != 0) {
+          throw AddressValueError(
+              'Trailing ":" only permitted as part of "::" in $addr');
+        }
+      }
+      partsSkipped = _hextetCount - (partsHi + partsLo);
+      if (partsSkipped < 1) {
+        throw AddressValueError(
+            'Expected at most $_hextetCount other parts with "::" in $addr');
+      }
+    } else {
+      if (parts.length != _hextetCount) {
+        throw AddressValueError(
+            'Exactly $_hextetCount parts expected without "::" in $addr');
+      }
+      if (parts[0].isEmpty) {
+        throw AddressValueError(
+            'Leading ":" only permitted as part of "::" in $addr');
+      }
+      if (parts[parts.length - 1].isEmpty) {
+        throw AddressValueError(
+            'Trailing ":" only permitted as part of "::" in $addr');
+      }
+      partsHi = parts.length;
+      partsLo = 0;
+      partsSkipped = 0;
+    }
+    try {
+      var ipInt = BigInt.zero;
+      range(0, partsHi).forEach((x) {
+        ipInt <<= 16;
+        ipInt |= _parseHextet(parts[x]);
+      });
+      ipInt <<= 16 * partsSkipped;
+      range(-partsLo, 0).forEach((x) {
+        ipInt <<= 16;
+        ipInt |= _parseHextet(parts[parts.length + x]);
+      });
+      return ipInt;
+    } catch (e) {
+      throw AddressValueError('$e in $addr');
+    }
+  }
+
+  String _stringFromIpInt(BigInt ipInt) {
+    if (ipInt > _allOne) {
+      throw ValueError('IPv6 address is too large');
+    }
+    var hexString = ipInt.toRadixString(16).padLeft(32, '0');
+    var hextets = stepRange(0, 32, 4)
+        .map((x) => int.parse(hexString.substring(x, x + 4), radix: 16)
+            .toRadixString(16))
+        .toList();
+    hextets = _compressHextets(hextets);
+    return hextets.join(':');
+  }
+
+  List<String> _compressHextets(List<String> hextets) {
+    var best_doublecolon_start = -1;
+    var best_doublecolon_len = 0;
+    var doublecolon_start = -1;
+    var doublecolon_len = 0;
+    hextets.asMap().forEach((index, hextet) {
+      if (hextet == '0') {
+        doublecolon_len += 1;
+        if (doublecolon_start == -1) {
+          doublecolon_start = index;
+        }
+        if (doublecolon_len > best_doublecolon_len) {
+          best_doublecolon_len = doublecolon_len;
+          best_doublecolon_start = doublecolon_start;
+        }
+      } else {
+        doublecolon_len = 0;
+        doublecolon_start = -1;
+      }
+    });
+    if (best_doublecolon_len > 1) {
+      var best_doublecolon_end = best_doublecolon_start + best_doublecolon_len;
+      if (best_doublecolon_end == hextets.length) {
+        hextets += [''];
+      }
+      hextets.removeRange(best_doublecolon_start, best_doublecolon_end);
+      hextets.insert(best_doublecolon_start, '');
+      if (best_doublecolon_start == 0) {
+        hextets = [''] + hextets;
+      }
+    }
+    return hextets;
+  }
+}
+
 class _BaseIPv4Address = _BaseAddress with _BaseV4;
 class _BaseIPv4Network = _BaseNetwork with _BaseV4;
 class _BaseIPv4Interface = _BaseAddress with _BaseV4;
+class _BaseIPv6Address = _BaseAddress with _BaseV6;
 
 /// A class for representing and manipulating single IPv4 Addresses.
 class IPv4Address extends _BaseIPv4Address implements _Address {
@@ -356,4 +517,49 @@ class IPv4Interface extends _BaseIPv4Interface implements _Interface {
 
   @override
   String toString() => withPrefixlen;
+}
+
+/// A class for representing and manipulating single IPv6 Addresses.
+class IPv6Address extends _BaseIPv6Address implements _Address {
+  /// Creates a new IPv6Address.
+  IPv6Address(String addr) {
+    if (addr == null) {
+      throw AddressValueError('Address cannot be empty');
+    }
+    _ip = _ipIntFromString(addr);
+  }
+
+  /// Crates a new IPv6Address from BigInt.
+  IPv6Address.fromInt(BigInt addr) {
+    if (addr == null) {
+      throw AddressValueError('Address cannot be empty');
+    }
+    _checkIntAddress(addr);
+    _ip = addr;
+  }
+
+  @override
+  String toString() => _stringFromIpInt(_ip);
+
+  @override
+  IPv6Address operator +(dynamic other) {
+    if (other is int) {
+      return IPv6Address.fromInt(_ip + BigInt.from(other));
+    } else if (other is BigInt) {
+      return IPv6Address.fromInt(_ip + other);
+    } else {
+      throw ValueError('Other is int or BigInt only');
+    }
+  }
+
+  @override
+  IPv6Address operator -(dynamic other) {
+    if (other is int) {
+      return IPv6Address.fromInt(_ip - BigInt.from(other));
+    } else if (other is BigInt) {
+      return IPv6Address.fromInt(_ip - other);
+    } else {
+      throw ValueError('Other is int or BigInt only');
+    }
+  }
 }

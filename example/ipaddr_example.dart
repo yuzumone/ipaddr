@@ -29,4 +29,11 @@ void main() {
   print(interface.withHostmask); // 192.168.10.10/0.0.0.255
   print(interface.withNetmask); // 192.168.10.10/255.255.255.0
   print(interface.withPrefixlen); // 192.168.10.10/24
+
+  var v6address = ipaddr.IPv6Address('2001:4860:4860::8888');
+  print(v6address); // 2001:4860:4860::8888
+  v6address = ipaddr.IPv6Address.fromInt(
+      BigInt.parse('42541956123769884636017138956568135816'));
+  print(v6address); // 2001:4860:4860::8888
+  print(v6address + 1); // 2001:4860:4860::8889
 }

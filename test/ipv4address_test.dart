@@ -32,8 +32,22 @@ void main() {
           true);
     });
 
+    test('OK: plus bigint test', () {
+      expect(
+          (IPv4Address('192.168.10.9') + BigInt.one) ==
+              IPv4Address('192.168.10.10'),
+          true);
+    });
+
     test('OK: minus test', () {
       expect((IPv4Address('192.168.10.11') - 1) == IPv4Address('192.168.10.10'),
+          true);
+    });
+
+    test('OK: minus bigint test', () {
+      expect(
+          (IPv4Address('192.168.10.11') - BigInt.one) ==
+              IPv4Address('192.168.10.10'),
           true);
     });
 
@@ -66,14 +80,24 @@ void main() {
       expect(() => IPv4Address(fault), throwsA(TypeMatcher<ValueError>()));
     });
 
-    test('OK: plus over 4294967295', () {
+    test('NG: plus over 4294967295', () {
       var addr = IPv4Address('255.255.255.255');
       expect(() => addr + 100, throwsA(TypeMatcher<AddressValueError>()));
     });
 
-    test('OK: minus under 0', () {
+    test('NG: plus other class', () {
+      var addr = IPv4Address('192.168.10.10');
+      expect(() => addr + Object, throwsA(TypeMatcher<ValueError>()));
+    });
+
+    test('NG: minus under 0', () {
       var addr = IPv4Address('0.0.0.0');
       expect(() => addr - 100, throwsA(TypeMatcher<AddressValueError>()));
+    });
+
+    test('NG: minus other class', () {
+      var addr = IPv4Address('192.168.10.10');
+      expect(() => addr - Object, throwsA(TypeMatcher<ValueError>()));
     });
   });
 }

@@ -17,13 +17,13 @@ class _BaseIPAddress extends Object {
 }
 
 class _BaseAddress extends _BaseIPAddress {
-  int _ip;
+  BigInt _ip;
 
   @override
   bool operator ==(other) => _ip == other._ip;
 
   @override
-  int get hashCode => _ip;
+  int get hashCode => _ip.hashCode;
 
   bool operator >(other) => _ip > other._ip;
 
@@ -34,26 +34,32 @@ class _BaseAddress extends _BaseIPAddress {
   bool operator <=(other) => _ip >= other._ip;
 
   /// Returns an integer representation of an IP address.
-  int toInt() => _ip;
+  int toInt() => _ip.toInt();
+
+  /// Returns an bigint representation of an IP address.
+  BigInt toBigInt() => _ip;
 }
 
 class _BaseNetwork extends _BaseIPAddress {
-  int _ip;
+  BigInt _ip;
   int _prefixlen;
 
   @override
   bool operator ==(other) => _ip == other._ip && _prefixlen == other.prefixlen;
 
   @override
-  int get hashCode => _ip ^ _prefixlen;
+  int get hashCode => _ip.hashCode ^ _prefixlen;
 }
 
 abstract class _Address {
   @override
   String toString();
 
-  _BaseAddress operator +(int other);
-  _BaseAddress operator -(int other);
+  /// Addition operator.
+  _BaseAddress operator +(other);
+
+  /// Subtraction operator.
+  _BaseAddress operator -(other);
 }
 
 abstract class _Network {
@@ -234,7 +240,7 @@ class IPv4Address extends _BaseIPv4Address implements _Address {
     if (addr.contains('/')) {
       throw AddressValueError('Unexpected \'/\' in ${addr}');
     }
-    _ip = _ipIntFromString(addr);
+    _ip = BigInt.from(_ipIntFromString(addr));
   }
 
   /// Crates a new IPv4Address from integer.
@@ -243,23 +249,39 @@ class IPv4Address extends _BaseIPv4Address implements _Address {
       throw AddressValueError('Address cannot be empty');
     }
     _checkIntAddress(addr);
-    _ip = addr;
+    _ip = BigInt.from(addr);
   }
 
   @override
-  String toString() => _stringFromIpInt(_ip);
+  String toString() => _stringFromIpInt(_ip.toInt());
 
   @override
-  IPv4Address operator +(int other) => IPv4Address.fromInt(_ip + other);
+  IPv4Address operator +(dynamic other) {
+    if (other is int) {
+      return IPv4Address.fromInt((_ip + BigInt.from(other)).toInt());
+    } else if (other is BigInt) {
+      return IPv4Address.fromInt((_ip + other).toInt());
+    } else {
+      throw ValueError('Other is int or BigInt only');
+    }
+  }
 
   @override
-  IPv4Address operator -(int other) => IPv4Address.fromInt(_ip - other);
+  IPv4Address operator -(dynamic other) {
+    if (other is int) {
+      return IPv4Address.fromInt((_ip - BigInt.from(other)).toInt());
+    } else if (other is BigInt) {
+      return IPv4Address.fromInt((_ip - other).toInt());
+    } else {
+      throw ValueError('Other is int or BigInt only');
+    }
+  }
 }
 
 /// A class for representing and manipulating 32-bit IPv4 network + addresses.
 class IPv4Network extends _BaseIPv4Network implements _Network {
   @override
-  IPv4Address get networkAddress => IPv4Address.fromInt(_ip);
+  IPv4Address get networkAddress => IPv4Address.fromInt(_ip.toInt());
   @override
   IPv4Address get netmask => _makeNetmask(_prefixlen);
   @override
@@ -292,14 +314,14 @@ class IPv4Network extends _BaseIPv4Network implements _Network {
   /// Throw ValueError when strict opstion is true and network address is not supplied.
   IPv4Network(String addr, {bool strict = true}) {
     var ap = _splitAddrPrefix(addr);
-    _ip = _ipIntFromString(ap[0]);
+    _ip = BigInt.from(_ipIntFromString(ap[0]));
     _prefixlen = _makePrefix(ap[1]);
     var packed = networkAddress.toInt();
     if (packed & netmask.toInt() != packed) {
       if (strict) {
         throw ValueError('${addr} has host bits set.');
       } else {
-        _ip = packed & netmask.toInt();
+        _ip = BigInt.from(packed & netmask.toInt());
       }
     }
   }
@@ -313,7 +335,7 @@ class IPv4Interface extends _BaseIPv4Interface implements _Interface {
   String _address;
   int _prefixlen;
   @override
-  IPv4Address get ip => IPv4Address.fromInt(_ip);
+  IPv4Address get ip => IPv4Address.fromInt(_ip.toInt());
   @override
   IPv4Network get network =>
       IPv4Network('${_address}/${_prefixlen}', strict: false);
@@ -327,8 +349,8 @@ class IPv4Interface extends _BaseIPv4Interface implements _Interface {
   /// Creates a new IPv4Interface.
   IPv4Interface(String addr) {
     var ap = _splitAddrPrefix(addr);
-    _ip = _ipIntFromString(ap[0]);
-    _address = _stringFromIpInt(_ip);
+    _ip = BigInt.from(_ipIntFromString(ap[0]));
+    _address = _stringFromIpInt(_ip.toInt());
     _prefixlen = _makePrefix(ap[1]);
   }
 

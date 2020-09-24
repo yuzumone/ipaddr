@@ -85,7 +85,7 @@ abstract class _Network {
   int get prefixlen;
 
   /// The total number of addresses in the network.
-  int get numAddresses;
+  dynamic get numAddresses;
 
   /// A string resresentation of the netwrok, with the mask in prefix length.
   String get withPrefixlen;
@@ -242,6 +242,26 @@ mixin _BaseV6 {
     }
   }
 
+  BigInt _ipIntFromPrefix(int prefixlen) {
+    return _allOne ^ (_allOne >> prefixlen);
+  }
+
+  IPv6Address _makeNetmask(int arg) {
+    var ipInt = _ipIntFromPrefix(arg);
+    return IPv6Address.fromInt(ipInt);
+  }
+
+  int _makePrefix(String arg) {
+    var prefix = int.tryParse(arg);
+    if (prefix != null) {
+      if (0 >= prefix || prefix > maxPrefixlen) {
+        throw NetmaskValueError('$prefix');
+      }
+      return prefix;
+    }
+    throw NetmaskValueError('$prefix');
+  }
+
   BigInt _parseHextet(String hextetStr) {
     if (hextetStr.length > 4) {
       throw ValueError('At most 4 characters permitted in $hextetStr');
@@ -390,6 +410,7 @@ class _BaseIPv4Address = _BaseAddress with _BaseV4;
 class _BaseIPv4Network = _BaseNetwork with _BaseV4;
 class _BaseIPv4Interface = _BaseAddress with _BaseV4;
 class _BaseIPv6Address = _BaseAddress with _BaseV6;
+class _BaseIPv6Network = _BaseNetwork with _BaseV6;
 
 /// A class for representing and manipulating single IPv4 Addresses.
 class IPv4Address extends _BaseIPv4Address implements _Address {
@@ -562,4 +583,57 @@ class IPv6Address extends _BaseIPv6Address implements _Address {
       throw ValueError('Other is int or BigInt only');
     }
   }
+}
+
+/// A class for representing and manipulating 128-bit IPv6 network + addresses.
+class IPv6Network extends _BaseIPv6Network implements _Network {
+  @override
+  IPv6Address get networkAddress => IPv6Address.fromInt(_ip);
+  @override
+  IPv6Address get netmask => _makeNetmask(_prefixlen);
+  @override
+  IPv6Address get hostmask => IPv6Address.fromInt(netmask.toBigInt() ^ _allOne);
+  @override
+  IPv6Address get broadcastAddress =>
+      IPv6Address.fromInt(networkAddress.toBigInt() | hostmask.toBigInt());
+  @override
+  Iterable<IPv6Address> get hosts => bigIntRange(
+          networkAddress.toBigInt() + BigInt.one, broadcastAddress.toBigInt())
+      .map((x) => IPv6Address.fromInt(x))
+      .toList();
+  @override
+  Iterable<IPv6Address> get addresses => bigIntRange(
+          networkAddress.toBigInt(), broadcastAddress.toBigInt() + BigInt.one)
+      .map((x) => IPv6Address.fromInt(x))
+      .toList();
+  @override
+  int get prefixlen => _prefixlen;
+  @override
+  BigInt get numAddresses =>
+      broadcastAddress.toBigInt() - networkAddress.toBigInt() + BigInt.one;
+  @override
+  String get withPrefixlen => '${networkAddress}/${prefixlen}';
+  @override
+  String get withNetmask => '${networkAddress}/${netmask}';
+  @override
+  String get withHostmask => '${networkAddress}/${hostmask}';
+
+  /// Creates a new IPv6Network.
+  /// Throw ValueError when strict opstion is true and network address is not supplied.
+  IPv6Network(String addr, {bool strict = true}) {
+    var ap = _splitAddrPrefix(addr);
+    _ip = _ipIntFromString(ap[0]);
+    _prefixlen = _makePrefix(ap[1]);
+    var packed = networkAddress.toBigInt();
+    if (packed & netmask.toBigInt() != packed) {
+      if (strict) {
+        throw ValueError('${addr} has host bits set.');
+      } else {
+        _ip = packed & netmask.toBigInt();
+      }
+    }
+  }
+
+  @override
+  String toString() => withPrefixlen;
 }

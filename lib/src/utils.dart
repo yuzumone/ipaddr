@@ -4,6 +4,12 @@ Iterable<int> range(int low, int high) sync* {
   }
 }
 
+Iterable<BigInt> bigIntRange(BigInt low, BigInt high) sync* {
+  for (var i = low; i < high; i = i + BigInt.one) {
+    yield i;
+  }
+}
+
 Iterable<int> stepRange(int a, [int stop, int step]) {
   int start;
 

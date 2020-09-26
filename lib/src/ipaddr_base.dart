@@ -411,6 +411,7 @@ class _BaseIPv4Network = _BaseNetwork with _BaseV4;
 class _BaseIPv4Interface = _BaseAddress with _BaseV4;
 class _BaseIPv6Address = _BaseAddress with _BaseV6;
 class _BaseIPv6Network = _BaseNetwork with _BaseV6;
+class _BaseIPv6Interface = _BaseAddress with _BaseV6;
 
 /// A class for representing and manipulating single IPv4 Addresses.
 class IPv4Address extends _BaseIPv4Address implements _Address {
@@ -632,6 +633,34 @@ class IPv6Network extends _BaseIPv6Network implements _Network {
         _ip = packed & netmask.toBigInt();
       }
     }
+  }
+
+  @override
+  String toString() => withPrefixlen;
+}
+
+/// A class for representing and manipulating single IPv6 Addresses + Networks.
+class IPv6Interface extends _BaseIPv6Interface implements _Interface {
+  String _address;
+  int _prefixlen;
+  @override
+  IPv6Address get ip => IPv6Address.fromInt(_ip);
+  @override
+  IPv6Network get network =>
+      IPv6Network('${_address}/${_prefixlen}', strict: false);
+  @override
+  String get withHostmask => '${ip}/${network.hostmask}';
+  @override
+  String get withNetmask => '${ip}/${network.netmask}';
+  @override
+  String get withPrefixlen => '${ip}/${_prefixlen}';
+
+  /// Creates a new IPv6Interface.
+  IPv6Interface(String addr) {
+    var ap = _splitAddrPrefix(addr);
+    _ip = _ipIntFromString(ap[0]);
+    _address = _stringFromIpInt(_ip);
+    _prefixlen = _makePrefix(ap[1]);
   }
 
   @override

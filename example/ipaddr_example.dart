@@ -52,4 +52,13 @@ void main() {
   print(v6network
       .withNetmask); // dead:beef::/ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffc
   print(v6network.withHostmask); // dead:beef::/::3
+
+  var v6interface = ipaddr.IPv6Interface('dead:beef::1/126');
+  print(v6interface); // dead:beef::1/126
+  print(v6interface.ip); // dead:beef::1
+  print(v6interface.network); // dead:beef::/126
+  print(v6interface.withHostmask); // dead:beef::1/::3
+  print(v6interface
+      .withNetmask); // dead:beef::1/ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffc
+  print(v6interface.withPrefixlen); // dead:beef::1/126
 }

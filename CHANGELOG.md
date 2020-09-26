@@ -1,5 +1,7 @@
 ## 1.0.0-dev
 - Add IPv6Address
+- Add IPv6Network
+- Add IPv6Interface
 
 ## 0.1.2
 - Add strict option to network object

@@ -1,4 +1,4 @@
-## 1.0.0-dev
+## 1.0.0
 - Add IPv6Address
 - Add IPv6Network
 - Add IPv6Interface

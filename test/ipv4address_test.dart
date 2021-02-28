@@ -27,6 +27,49 @@ void main() {
       expect(IPv4Address(ipStr) == IPv4Address(ipStr), true);
     });
 
+    test('OK: equal false test', () {
+      expect(
+          IPv4Address('192.168.10.0') == IPv4Address('192.168.10.10'), false);
+    });
+
+    test('OK: equal other class false test', () {
+      expect(IPv4Address('192.168.10.0') == Object(), false);
+    });
+
+    test('OK: not equal test', () {
+      expect(IPv4Address('192.168.10.0') != IPv4Address('192.168.10.10'), true);
+    });
+
+    test('OK: not equal false test', () {
+      var ipStr = '192.168.10.10';
+      expect(IPv4Address(ipStr) != IPv4Address(ipStr), false);
+    });
+
+    test('OK: > operator test', () {
+      expect(IPv4Address('192.168.10.10') > IPv4Address('192.168.10.0'), true);
+    });
+
+    test('OK: > operator false test', () {
+      expect(IPv4Address('192.168.10.0') > IPv4Address('192.168.10.10'), false);
+    });
+
+    test('OK: > operator other class false test', () {
+      expect(IPv4Address('192.168.10.0') > Object(), false);
+    });
+
+    test('OK: >= operator test', () {
+      expect(IPv4Address('192.168.10.10') >= IPv4Address('192.168.10.0'), true);
+    });
+
+    test('OK: >= operator false test', () {
+      expect(
+          IPv4Address('192.168.10.0') >= IPv4Address('192.168.10.10'), false);
+    });
+
+    test('OK: >= operator other class false test', () {
+      expect(IPv4Address('192.168.10.0') >= Object(), false);
+    });
+
     test('OK: plus test', () {
       expect((IPv4Address('192.168.10.9') + 1) == IPv4Address('192.168.10.10'),
           true);

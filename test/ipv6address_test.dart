@@ -27,6 +27,65 @@ void main() {
       expect(IPv6Address(ipStr) == IPv6Address(ipStr), true);
     });
 
+    test('OK: equal false test', () {
+      expect(
+          IPv6Address('2001:4860:4860::8888') ==
+              IPv6Address('2001:4860:4860::8844'),
+          false);
+    });
+
+    test('OK: equal other class false test', () {
+      expect(IPv6Address('2001:4860:4860::8888') == Object(), false);
+    });
+
+    test('OK: not equal test', () {
+      expect(
+          IPv6Address('2001:4860:4860::8888') !=
+              IPv6Address('2001:4860:4860::8844'),
+          true);
+    });
+
+    test('OK: not equal false test', () {
+      var ipStr = '2001:4860:4860::8888';
+      expect(IPv6Address(ipStr) != IPv6Address(ipStr), false);
+    });
+
+    test('OK: > operator test', () {
+      expect(
+          IPv6Address('2001:4860:4860::8888') >
+              IPv6Address('2001:4860:4860::8844'),
+          true);
+    });
+
+    test('OK: > operator false test', () {
+      expect(
+          IPv6Address('2001:4860:4860::8844') >
+              IPv6Address('2001:4860:4860::8888'),
+          false);
+    });
+
+    test('OK: > operator other class false test', () {
+      expect(IPv6Address('2001:4860:4860::8844') > Object(), false);
+    });
+
+    test('OK: >= operator test', () {
+      expect(
+          IPv6Address('2001:4860:4860::8888') >=
+              IPv6Address('2001:4860:4860::8844'),
+          true);
+    });
+
+    test('OK: >= operator false test', () {
+      expect(
+          IPv6Address('2001:4860:4860::8844') >=
+              IPv6Address('2001:4860:4860::8888'),
+          false);
+    });
+
+    test('OK: >= operator other class false test', () {
+      expect(IPv6Address('2001:4860:4860::8844') >= Object(), false);
+    });
+
     test('OK: plus test', () {
       var ipStr1 = '2001:4860:4860::8888';
       var ipStr2 = '2001:4860:4860::8889';

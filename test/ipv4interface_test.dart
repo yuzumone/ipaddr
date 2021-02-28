@@ -33,6 +33,49 @@ void main() {
       expect(IPv4Interface(ipStr) == IPv4Interface(ipStr), true);
     });
 
+    test('OK: not equal test', () {
+      expect(
+          IPv4Interface('192.168.10.0/30') != IPv4Interface('192.168.10.10/30'),
+          true);
+    });
+
+    test('OK: not equal false test', () {
+      var ipStr = '192.168.10.10/30';
+      expect(IPv4Interface(ipStr) != IPv4Interface(ipStr), false);
+    });
+
+    test('OK: > operator test', () {
+      expect(
+          IPv4Interface('192.168.10.10/30') > IPv4Interface('192.168.10.0/30'),
+          true);
+    });
+
+    test('OK: > operator false test', () {
+      expect(
+          IPv4Interface('192.168.10.0/30') > IPv4Interface('192.168.10.10/30'),
+          false);
+    });
+
+    test('OK: > operator other class false test', () {
+      expect(IPv4Interface('192.168.10.0/30') > Object(), false);
+    });
+
+    test('OK: >= operator test', () {
+      expect(
+          IPv4Interface('192.168.10.10/30') >= IPv4Interface('192.168.10.0/30'),
+          true);
+    });
+
+    test('OK: >= operator false test', () {
+      expect(
+          IPv4Interface('192.168.10.0/30') >= IPv4Interface('192.168.10.10/30'),
+          false);
+    });
+
+    test('OK: >= operator other class false test', () {
+      expect(IPv4Interface('192.168.10.0/30') >= Object(), false);
+    });
+
     test('NG: exclude subnet', () {
       var fault = '192.168.10.10';
       expect(() => IPv4Interface(fault),

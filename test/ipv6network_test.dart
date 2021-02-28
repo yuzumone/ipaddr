@@ -39,6 +39,25 @@ void main() {
       expect(IPv6Network(ipStr) == IPv6Network(ipStr), true);
     });
 
+    test('OK: equal false test', () {
+      expect(IPv6Network('dead:beef::/126') == IPv6Network('dead:beef::/64'),
+          false);
+    });
+
+    test('OK: equal other class false test', () {
+      expect(IPv6Network('dead:beef::/126') == Object(), false);
+    });
+
+    test('OK: not equal test', () {
+      expect(IPv6Network('dead:beef::/126') != IPv6Network('dead:beef::/64'),
+          true);
+    });
+
+    test('OK: not equal false test', () {
+      var ipStr = 'dead:beef::/126';
+      expect(IPv6Network(ipStr) != IPv6Network(ipStr), false);
+    });
+
     test('OK: strict option is false', () {
       expect(
           IPv6Network('dead:beef::1/126', strict: false) ==

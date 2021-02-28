@@ -61,6 +61,25 @@ void main() {
       expect(IPv4Network(ipStr) == IPv4Network(ipStr), true);
     });
 
+    test('OK: equal false test', () {
+      expect(IPv4Network('192.168.10.0/30') == IPv4Network('192.168.10.0/31'),
+          false);
+    });
+
+    test('OK: equal other class false test', () {
+      expect(IPv4Network('192.168.10.0/30') == Object(), false);
+    });
+
+    test('OK: not equal test', () {
+      expect(IPv4Network('192.168.10.0/30') != IPv4Network('192.168.10.0/31'),
+          true);
+    });
+
+    test('OK: not equal false test', () {
+      var ipStr = '192.168.10.0/30';
+      expect(IPv4Network(ipStr) != IPv4Network(ipStr), false);
+    });
+
     test('OK: strict option is false', () {
       expect(
           IPv4Network('192.168.10.1/30', strict: false) ==

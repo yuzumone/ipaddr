@@ -1,3 +1,6 @@
+## 1.0.1-dev
+- Fix operator
+
 ## 1.0.0
 - Add IPv6Address
 - Add IPv6Network

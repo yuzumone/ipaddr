@@ -20,18 +20,34 @@ class _BaseAddress extends _BaseIPAddress {
   BigInt _ip;
 
   @override
-  bool operator ==(other) => _ip == other._ip;
+  bool operator ==(other) =>
+      identical(this, other) ||
+      other is _BaseAddress &&
+          runtimeType == other.runtimeType &&
+          _ip == other._ip;
 
   @override
   int get hashCode => _ip.hashCode;
 
-  bool operator >(other) => _ip > other._ip;
+  bool operator >(other) =>
+      other is _BaseAddress &&
+      runtimeType == other.runtimeType &&
+      _ip > other._ip;
 
-  bool operator <(other) => _ip < other._ip;
+  bool operator <(other) =>
+      other is _BaseAddress &&
+      runtimeType == other.runtimeType &&
+      _ip < other._ip;
 
-  bool operator >=(other) => _ip >= other._ip;
+  bool operator >=(other) =>
+      other is _BaseAddress &&
+      runtimeType == other.runtimeType &&
+      _ip >= other._ip;
 
-  bool operator <=(other) => _ip >= other._ip;
+  bool operator <=(other) =>
+      other is _BaseAddress &&
+      runtimeType == other.runtimeType &&
+      _ip >= other._ip;
 
   /// Returns an integer representation of an IP address.
   int toInt() => _ip.toInt();
@@ -45,7 +61,12 @@ class _BaseNetwork extends _BaseIPAddress {
   int _prefixlen;
 
   @override
-  bool operator ==(other) => _ip == other._ip && _prefixlen == other.prefixlen;
+  bool operator ==(other) =>
+      identical(this, other) ||
+      other is _BaseNetwork &&
+          runtimeType == other.runtimeType &&
+          _ip == other._ip &&
+          _prefixlen == other._prefixlen;
 
   @override
   int get hashCode => _ip.hashCode ^ _prefixlen;

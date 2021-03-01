@@ -18,6 +18,17 @@ void main() {
       expect(interface.withHostmask, 'dead:beef::/::3');
     });
 
+    test('OK: tryParse', () {
+      var ip = 'dead:beef::/126';
+      interface = IPv6Interface.tryParse(ip);
+      expect(interface.toString(), ip);
+    });
+
+    test('OK: tryParse null', () {
+      interface = IPv6Interface.tryParse('-1');
+      expect(interface, null);
+    });
+
     test('OK: equal test', () {
       var ipStr = 'dead:beef::1/126';
       expect(IPv6Interface(ipStr) == IPv6Interface(ipStr), true);

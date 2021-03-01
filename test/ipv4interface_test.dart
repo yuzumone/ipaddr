@@ -28,6 +28,17 @@ void main() {
       expect(interface.withHostmask, '192.168.10.0/0.0.0.3');
     });
 
+    test('OK: tryParse', () {
+      var ip = '192.168.10.0/30';
+      interface = IPv4Interface.tryParse(ip);
+      expect(interface.toString(), ip);
+    });
+
+    test('OK: tryParse null', () {
+      interface = IPv4Interface.tryParse('-1');
+      expect(interface, null);
+    });
+
     test('OK: equal test', () {
       var ipStr = '192.168.10.0/30';
       expect(IPv4Interface(ipStr) == IPv4Interface(ipStr), true);

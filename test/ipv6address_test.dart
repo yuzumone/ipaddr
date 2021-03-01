@@ -22,6 +22,29 @@ void main() {
       expect(addr.toBigInt(), BigInt.parse(intStr));
     });
 
+    test('OK: tryParse', () {
+      var ipStr = '2001:4860:4860::8888';
+      addr = IPv6Address.tryParse(ipStr);
+      expect(addr.toString(), ipStr);
+    });
+
+    test('OK: tryParse null', () {
+      addr = IPv6Address.tryParse('-1');
+      expect(addr, null);
+    });
+
+    test('OK: tryParseFromInt', () {
+      var intStr = '42541956123769884636017138956568135816';
+      addr = IPv6Address.tryParseFromInt(BigInt.parse(intStr));
+      expect(addr.toBigInt(), BigInt.parse(intStr));
+    });
+
+    test('OK: tryParseFromInt null', () {
+      var fault = BigInt.one - BigInt.two;
+      addr = IPv6Address.tryParseFromInt(fault);
+      expect(addr, null);
+    });
+
     test('OK: equal test', () {
       var ipStr = '2001:4860:4860::8888';
       expect(IPv6Address(ipStr) == IPv6Address(ipStr), true);

@@ -456,6 +456,27 @@ class IPv4Address extends _BaseIPv4Address implements _Address {
     _ip = BigInt.from(addr);
   }
 
+  /// Create a new IPv4Address.
+  /// Like constructor except that this function returns null.
+  static IPv4Address tryParse(String addr) {
+    if (addr.isEmpty) return null;
+    try {
+      return IPv4Address(addr);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Create a new IPv4Address from integer.
+  /// Like constructor except that this function returns null.
+  static IPv4Address tryParseFromInt(int addr) {
+    try {
+      return IPv4Address.fromInt(addr);
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
   String toString() => _stringFromIpInt(_ip.toInt());
 
@@ -530,6 +551,17 @@ class IPv4Network extends _BaseIPv4Network implements _Network {
     }
   }
 
+  /// Creates a new IPv4Network.
+  /// Like constructor except that this function returns null.
+  static IPv4Network tryParse(String addr, {bool strict = true}) {
+    if (addr.isEmpty) return null;
+    try {
+      return IPv4Network(addr, strict: strict);
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
   String toString() => withPrefixlen;
 }
@@ -558,6 +590,17 @@ class IPv4Interface extends _BaseIPv4Interface implements _Interface {
     _prefixlen = _makePrefix(ap[1]);
   }
 
+  /// Creates a new IPv4Interface.
+  /// Like constructor except that this function returns null.
+  static IPv4Interface tryParse(String addr) {
+    if (addr.isEmpty) return null;
+    try {
+      return IPv4Interface(addr);
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
   String toString() => withPrefixlen;
 }
@@ -572,13 +615,34 @@ class IPv6Address extends _BaseIPv6Address implements _Address {
     _ip = _ipIntFromString(addr);
   }
 
-  /// Crates a new IPv6Address from BigInt.
+  /// Creates a new IPv6Address from BigInt.
   IPv6Address.fromInt(BigInt addr) {
     if (addr == null) {
       throw AddressValueError('Address cannot be empty');
     }
     _checkIntAddress(addr);
     _ip = addr;
+  }
+
+  /// Creates a new IPv6Address.
+  /// Like constructor except that this function returns null.
+  static IPv6Address tryParse(String addr) {
+    if (addr.isEmpty) return null;
+    try {
+      return IPv6Address(addr);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Creates a new IPv6Address.
+  /// Like constructor except that this function returns null.
+  static IPv6Address tryParseFromInt(BigInt addr) {
+    try {
+      return IPv6Address.fromInt(addr);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
@@ -656,6 +720,17 @@ class IPv6Network extends _BaseIPv6Network implements _Network {
     }
   }
 
+  /// Creates a new IPv6Network.
+  /// Like constructor except that this function returns null.
+  static IPv6Network tryParse(String addr, {bool strict = true}) {
+    if (addr.isEmpty) return null;
+    try {
+      return IPv6Network(addr, strict: strict);
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
   String toString() => withPrefixlen;
 }
@@ -682,6 +757,17 @@ class IPv6Interface extends _BaseIPv6Interface implements _Interface {
     _ip = _ipIntFromString(ap[0]);
     _address = _stringFromIpInt(_ip);
     _prefixlen = _makePrefix(ap[1]);
+  }
+
+  /// Creates a new IPv6Interface.
+  /// Like constructor except that this function returns null.
+  static IPv6Interface tryParse(String addr) {
+    if (addr.isEmpty) return null;
+    try {
+      return IPv6Interface(addr);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override

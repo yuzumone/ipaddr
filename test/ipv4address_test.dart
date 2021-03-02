@@ -22,6 +22,28 @@ void main() {
       expect(addr.toInt(), ipInt);
     });
 
+    test('OK: tryParse', () {
+      var ipStr = '192.168.10.10';
+      addr = IPv4Address.tryParse(ipStr);
+      expect(addr.toString(), ipStr);
+    });
+
+    test('OK: tryParse null', () {
+      addr = IPv4Address.tryParse('-1');
+      expect(addr, null);
+    });
+
+    test('OK: tryParseFromInt', () {
+      var ipInt = 3232238090;
+      addr = IPv4Address.tryParseFromInt(ipInt);
+      expect(addr.toInt(), ipInt);
+    });
+
+    test('OK: tryParseFromInt', () {
+      addr = IPv4Address.tryParseFromInt(-1);
+      expect(addr, null);
+    });
+
     test('OK: equal test', () {
       var ipStr = '192.168.10.10';
       expect(IPv4Address(ipStr) == IPv4Address(ipStr), true);

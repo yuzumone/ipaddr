@@ -34,6 +34,17 @@ void main() {
       expect(network.numAddresses, BigInt.from(4));
     });
 
+    test('OK: tryParse', () {
+      var ip = 'dead:beef::/126';
+      network = IPv6Network.tryParse(ip);
+      expect(network.toString(), ip);
+    });
+
+    test('OK: tryParse null', () {
+      network = IPv6Network.tryParse('-1');
+      expect(network, null);
+    });
+
     test('OK: equal test', () {
       var ipStr = 'dead:beef::/126';
       expect(IPv6Network(ipStr) == IPv6Network(ipStr), true);

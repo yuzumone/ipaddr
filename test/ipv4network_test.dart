@@ -56,6 +56,17 @@ void main() {
       expect(network.numAddresses, 4);
     });
 
+    test('OK: tryParse', () {
+      var ip = '192.168.10.0/30';
+      network = IPv4Network.tryParse(ip);
+      expect(network.toString(), ip);
+    });
+
+    test('OK: tryParse null', () {
+      network = IPv4Network.tryParse('-1');
+      expect(network, null);
+    });
+
     test('OK: equal test', () {
       var ipStr = '192.168.10.0/30';
       expect(IPv4Network(ipStr) == IPv4Network(ipStr), true);

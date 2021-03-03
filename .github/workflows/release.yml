@@ -1,0 +1,37 @@
+name: pub release
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true && contains(github.ref, 'release')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: pub publish
+        uses: sakebook/actions-flutter-pub-publisher@v1.3.1
+        with:
+          credential: ${{ secrets.CREDENTIAL_JSON }}
+          flutter_package: false
+          dry_run: false
+      - name: set version
+        run: |
+          echo ::set-env name=TAG_NAME::$(grep '##' CHANGELOG.md | head -n1 | cut -d ' ' -f2)
+      - name: set changelog
+        id: changelog
+        run: |
+          echo ::set-output name=body::$(cat CHANGELOG.md | sed -n -e '1,/^$/p' | sed -e '/^#/d' -e '/^$/d')
+      - name: Create ReleaseNote
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          release_name: ${{ env.TAG_NAME }}
+          body: |
+            ${{ steps.changelog.outputs.body }}
+          draft: false
+          prerelease: false

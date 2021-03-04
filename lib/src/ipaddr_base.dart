@@ -10,7 +10,7 @@ class _BaseIPAddress extends Object {
     }
     var addr = address.split('/');
     if (addr.length != 2) {
-      throw AddressValueError('Only one \'/\' permitted in ${address}');
+      throw AddressValueError('Only one \'/\' permitted in $address');
     }
     return addr;
   }
@@ -148,7 +148,7 @@ mixin _BaseV4 {
   void _checkIntAddress(int ipInt) {
     if (ipInt < 0 || ipInt > _allOne) {
       throw AddressValueError(
-          '${ipInt} (0 > addr => 255) is permitted as an IPv4 address');
+          '$ipInt (0 > addr => 255) is permitted as an IPv4 address');
     }
   }
 
@@ -161,7 +161,7 @@ mixin _BaseV4 {
     var prefix = int.tryParse(arg);
     if (prefix != null) {
       if (0 >= prefix || prefix > maxPrefixlen) {
-        throw NetmaskValueError('${prefix}');
+        throw NetmaskValueError('$prefix');
       }
       return prefix;
     } else {
@@ -185,11 +185,11 @@ mixin _BaseV4 {
   Uint8List _parseOctets(List<String> octets) {
     var list = octets.map((x) {
       if (x.length > 3) {
-        throw ValueError('At most 3 characters permitted in ${x}');
+        throw ValueError('At most 3 characters permitted in $x');
       }
       var octetInt = int.tryParse(x);
       if (octetInt == null || octetInt > 255) {
-        throw ValueError('Octet ${octetInt} (> 255) not permitted');
+        throw ValueError('Octet $octetInt (> 255) not permitted');
       }
       return octetInt;
     }).toList();
@@ -202,7 +202,7 @@ mixin _BaseV4 {
     }
     var octets = addr.split('.');
     if (octets.length != 4) {
-      throw AddressValueError('Expected 4 octets in ${addr}');
+      throw AddressValueError('Expected 4 octets in $addr');
     }
     var list = _parseOctets(octets);
     return ByteData.view(list.buffer).getUint32(0);
@@ -259,7 +259,7 @@ mixin _BaseV6 {
   void _checkIntAddress(BigInt ipInt) {
     if (ipInt < BigInt.zero || ipInt > _allOne) {
       throw AddressValueError(
-          '${ipInt} (0 > addr => $_allOne) is permitted as an IPv6 address');
+          '$ipInt (0 > addr => $_allOne) is permitted as an IPv6 address');
     }
   }
 
@@ -442,7 +442,7 @@ class IPv4Address extends _BaseIPv4Address implements _Address {
       throw AddressValueError('Address cannot be empty');
     }
     if (addr.contains('/')) {
-      throw AddressValueError('Unexpected \'/\' in ${addr}');
+      throw AddressValueError('Unexpected \'/\' in $addr');
     }
     _ip = BigInt.from(_ipIntFromString(addr));
   }
@@ -529,11 +529,11 @@ class IPv4Network extends _BaseIPv4Network implements _Network {
   @override
   int get numAddresses => broadcastAddress.toInt() - networkAddress.toInt() + 1;
   @override
-  String get withPrefixlen => '${networkAddress}/${prefixlen}';
+  String get withPrefixlen => '$networkAddress/$prefixlen';
   @override
-  String get withNetmask => '${networkAddress}/${netmask}';
+  String get withNetmask => '$networkAddress/$netmask';
   @override
-  String get withHostmask => '${networkAddress}/${hostmask}';
+  String get withHostmask => '$networkAddress/$hostmask';
 
   /// Creates a new IPv4Network.
   /// Throw ValueError when strict opstion is true and network address is not supplied.
@@ -544,7 +544,7 @@ class IPv4Network extends _BaseIPv4Network implements _Network {
     var packed = networkAddress.toInt();
     if (packed & netmask.toInt() != packed) {
       if (strict) {
-        throw ValueError('${addr} has host bits set.');
+        throw ValueError('$addr has host bits set.');
       } else {
         _ip = BigInt.from(packed & netmask.toInt());
       }
@@ -574,13 +574,13 @@ class IPv4Interface extends _BaseIPv4Interface implements _Interface {
   IPv4Address get ip => IPv4Address.fromInt(_ip.toInt());
   @override
   IPv4Network get network =>
-      IPv4Network('${_address}/${_prefixlen}', strict: false);
+      IPv4Network('$_address/$_prefixlen', strict: false);
   @override
-  String get withHostmask => '${ip}/${network.hostmask}';
+  String get withHostmask => '$ip/${network.hostmask}';
   @override
-  String get withNetmask => '${ip}/${network.netmask}';
+  String get withNetmask => '$ip/${network.netmask}';
   @override
-  String get withPrefixlen => '${ip}/${_prefixlen}';
+  String get withPrefixlen => '$ip/$_prefixlen';
 
   /// Creates a new IPv4Interface.
   IPv4Interface(String addr) {
@@ -698,11 +698,11 @@ class IPv6Network extends _BaseIPv6Network implements _Network {
   BigInt get numAddresses =>
       broadcastAddress.toBigInt() - networkAddress.toBigInt() + BigInt.one;
   @override
-  String get withPrefixlen => '${networkAddress}/${prefixlen}';
+  String get withPrefixlen => '$networkAddress/$prefixlen';
   @override
-  String get withNetmask => '${networkAddress}/${netmask}';
+  String get withNetmask => '$networkAddress/$netmask';
   @override
-  String get withHostmask => '${networkAddress}/${hostmask}';
+  String get withHostmask => '$networkAddress/$hostmask';
 
   /// Creates a new IPv6Network.
   /// Throw ValueError when strict opstion is true and network address is not supplied.
@@ -713,7 +713,7 @@ class IPv6Network extends _BaseIPv6Network implements _Network {
     var packed = networkAddress.toBigInt();
     if (packed & netmask.toBigInt() != packed) {
       if (strict) {
-        throw ValueError('${addr} has host bits set.');
+        throw ValueError('$addr has host bits set.');
       } else {
         _ip = packed & netmask.toBigInt();
       }
@@ -743,13 +743,13 @@ class IPv6Interface extends _BaseIPv6Interface implements _Interface {
   IPv6Address get ip => IPv6Address.fromInt(_ip);
   @override
   IPv6Network get network =>
-      IPv6Network('${_address}/${_prefixlen}', strict: false);
+      IPv6Network('$_address/$_prefixlen', strict: false);
   @override
-  String get withHostmask => '${ip}/${network.hostmask}';
+  String get withHostmask => '$ip/${network.hostmask}';
   @override
-  String get withNetmask => '${ip}/${network.netmask}';
+  String get withNetmask => '$ip/${network.netmask}';
   @override
-  String get withPrefixlen => '${ip}/${_prefixlen}';
+  String get withPrefixlen => '$ip/$_prefixlen';
 
   /// Creates a new IPv6Interface.
   IPv6Interface(String addr) {

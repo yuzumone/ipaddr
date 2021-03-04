@@ -1,6 +1,7 @@
 ## 1.0.1-dev
 - Fix operator
 - Add tryParse
+- Fix lint
 
 ## 1.0.0
 - Add IPv6Address

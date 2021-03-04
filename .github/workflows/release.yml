@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    if: github.event.pull_request.merged == true && contains(github.ref, 'release')
+    if: github.event.pull_request.merged == true && contains(github.head_ref, 'release')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

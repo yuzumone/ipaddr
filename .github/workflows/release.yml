@@ -18,19 +18,22 @@ jobs:
           flutter_package: false
           dry_run: false
       - name: set version
+        id: tag
         run: |
-          echo ::set-env name=TAG_NAME::$(grep '##' CHANGELOG.md | head -n1 | cut -d ' ' -f2)
+          echo ::set-output name=tag::$(grep '##' CHANGELOG.md | head -n1 | cut -d ' ' -f2)
       - name: set changelog
         id: changelog
         run: |
-          echo ::set-output name=body::$(cat CHANGELOG.md | sed -n -e '1,/^$/p' | sed -e '/^#/d' -e '/^$/d')
+          body=$(cat CHANGELOG.md | sed -n -e '1,/^$/p' | sed -e '/^#/d' -e '/^$/d')
+          body=${body//$'\n'/\\n}
+          echo ::set-output name=body::$body
       - name: Create ReleaseNote
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.TAG_NAME }}
-          release_name: ${{ env.TAG_NAME }}
+          tag_name: ${{ steps.tag.outputs.tag }}
+          release_name: ${{ steps.tag.outputs.tag }}
           body: |
             ${{ steps.changelog.outputs.body }}
           draft: false

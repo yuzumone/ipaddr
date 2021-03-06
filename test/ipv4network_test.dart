@@ -4,7 +4,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('IPv4Network tests', () {
-    IPv4Network network;
     var networkAddress = IPv4Address('192.168.10.0');
     var broadcastAddress = IPv4Address('192.168.10.3');
     var netmask = IPv4Address('255.255.255.252');
@@ -12,7 +11,7 @@ void main() {
 
     test('OK: subnet is int', () {
       var ip = '192.168.10.0/30';
-      network = IPv4Network(ip);
+      var network = IPv4Network(ip);
       expect(network.toString(), ip);
       expect(network.networkAddress, networkAddress);
       expect(network.broadcastAddress, broadcastAddress);
@@ -35,7 +34,7 @@ void main() {
 
     test('OK: subnet is string', () {
       var ip = '192.168.10.0/255.255.255.252';
-      network = IPv4Network(ip);
+      var network = IPv4Network(ip);
       expect(network.toString(), '192.168.10.0/30');
       expect(network.networkAddress, networkAddress);
       expect(network.broadcastAddress, broadcastAddress);
@@ -58,12 +57,12 @@ void main() {
 
     test('OK: tryParse', () {
       var ip = '192.168.10.0/30';
-      network = IPv4Network.tryParse(ip);
+      var network = IPv4Network.tryParse(ip);
       expect(network.toString(), ip);
     });
 
     test('OK: tryParse null', () {
-      network = IPv4Network.tryParse('-1');
+      var network = IPv4Network.tryParse('-1');
       expect(network, null);
     });
 
@@ -119,11 +118,6 @@ void main() {
       var fault = '192.168.10.10/255.255.255.256';
       expect(
           () => IPv4Network(fault), throwsA(TypeMatcher<NetmaskValueError>()));
-    });
-
-    test('NG: address is null', () {
-      expect(
-          () => IPv4Network(null), throwsA(TypeMatcher<AddressValueError>()));
     });
   });
 }

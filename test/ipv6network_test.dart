@@ -4,7 +4,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('IPv6Network tests', () {
-    IPv6Network network;
     var networkAddress = IPv6Address('dead:beef::');
     var broadcastAddress = IPv6Address('dead:beef::3');
     var netmask = IPv6Address('ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffc');
@@ -12,7 +11,7 @@ void main() {
 
     test('OK: subnet is int', () {
       var ip = 'dead:beef::/126';
-      network = IPv6Network(ip);
+      var network = IPv6Network(ip);
       expect(network.toString(), ip);
       expect(network.networkAddress, networkAddress);
       expect(network.broadcastAddress, broadcastAddress);
@@ -36,12 +35,12 @@ void main() {
 
     test('OK: tryParse', () {
       var ip = 'dead:beef::/126';
-      network = IPv6Network.tryParse(ip);
+      var network = IPv6Network.tryParse(ip);
       expect(network.toString(), ip);
     });
 
     test('OK: tryParse null', () {
-      network = IPv6Network.tryParse('-1');
+      var network = IPv6Network.tryParse('-1');
       expect(network, null);
     });
 
@@ -91,11 +90,6 @@ void main() {
       var fault = 'dead:beef::/130';
       expect(
           () => IPv6Network(fault), throwsA(TypeMatcher<NetmaskValueError>()));
-    });
-
-    test('NG: address is null', () {
-      expect(
-          () => IPv6Network(null), throwsA(TypeMatcher<AddressValueError>()));
     });
   });
 }

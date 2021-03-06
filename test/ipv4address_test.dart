@@ -4,12 +4,10 @@ import 'package:test/test.dart';
 
 void main() {
   group('IPv4Address tests', () {
-    IPv4Address addr;
-
     test('OK: from ip string', () {
       var ipStr = '192.168.10.10';
       var ipInt = 3232238090;
-      addr = IPv4Address(ipStr);
+      var addr = IPv4Address(ipStr);
       expect(addr.toString(), ipStr);
       expect(addr.toInt(), ipInt);
     });
@@ -17,30 +15,30 @@ void main() {
     test('OK: from ip int', () {
       var ipStr = '192.168.10.10';
       var ipInt = 3232238090;
-      addr = IPv4Address.fromInt(ipInt);
+      var addr = IPv4Address.fromInt(ipInt);
       expect(addr.toString(), ipStr);
       expect(addr.toInt(), ipInt);
     });
 
     test('OK: tryParse', () {
       var ipStr = '192.168.10.10';
-      addr = IPv4Address.tryParse(ipStr);
+      var addr = IPv4Address.tryParse(ipStr);
       expect(addr.toString(), ipStr);
     });
 
     test('OK: tryParse null', () {
-      addr = IPv4Address.tryParse('-1');
+      var addr = IPv4Address.tryParse('-1');
       expect(addr, null);
     });
 
     test('OK: tryParseFromInt', () {
       var ipInt = 3232238090;
-      addr = IPv4Address.tryParseFromInt(ipInt);
-      expect(addr.toInt(), ipInt);
+      var addr = IPv4Address.tryParseFromInt(ipInt);
+      expect(addr!.toInt(), ipInt);
     });
 
     test('OK: tryParseFromInt', () {
-      addr = IPv4Address.tryParseFromInt(-1);
+      var addr = IPv4Address.tryParseFromInt(-1);
       expect(addr, null);
     });
 
@@ -120,13 +118,6 @@ void main() {
       var fault = '192.168.10.10/24';
       expect(
           () => IPv4Address(fault), throwsA(TypeMatcher<AddressValueError>()));
-    });
-
-    test('NG: address is null', () {
-      expect(
-          () => IPv4Address(null), throwsA(TypeMatcher<AddressValueError>()));
-      expect(() => IPv4Address.fromInt(null),
-          throwsA(TypeMatcher<AddressValueError>()));
     });
 
     test('NG: address is not 4 octects', () {

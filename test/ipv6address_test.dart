@@ -4,12 +4,10 @@ import 'package:test/test.dart';
 
 void main() {
   group('IPv6Address tests', () {
-    IPv6Address addr;
-
     test('OK: from ip string', () {
       var ipStr = '2001:4860:4860::8888';
       var intStr = '42541956123769884636017138956568135816';
-      addr = IPv6Address(ipStr);
+      var addr = IPv6Address(ipStr);
       expect(addr.toString(), ipStr);
       expect(addr.toBigInt(), BigInt.parse(intStr));
     });
@@ -17,31 +15,31 @@ void main() {
     test('OK: from ip int', () {
       var ipStr = '2001:4860:4860::8888';
       var intStr = '42541956123769884636017138956568135816';
-      addr = IPv6Address.fromInt(BigInt.parse(intStr));
+      var addr = IPv6Address.fromInt(BigInt.parse(intStr));
       expect(addr.toString(), ipStr);
       expect(addr.toBigInt(), BigInt.parse(intStr));
     });
 
     test('OK: tryParse', () {
       var ipStr = '2001:4860:4860::8888';
-      addr = IPv6Address.tryParse(ipStr);
+      var addr = IPv6Address.tryParse(ipStr);
       expect(addr.toString(), ipStr);
     });
 
     test('OK: tryParse null', () {
-      addr = IPv6Address.tryParse('-1');
+      var addr = IPv6Address.tryParse('-1');
       expect(addr, null);
     });
 
     test('OK: tryParseFromInt', () {
       var intStr = '42541956123769884636017138956568135816';
-      addr = IPv6Address.tryParseFromInt(BigInt.parse(intStr));
-      expect(addr.toBigInt(), BigInt.parse(intStr));
+      var addr = IPv6Address.tryParseFromInt(BigInt.parse(intStr));
+      expect(addr!.toBigInt(), BigInt.parse(intStr));
     });
 
     test('OK: tryParseFromInt null', () {
       var fault = BigInt.one - BigInt.two;
-      addr = IPv6Address.tryParseFromInt(fault);
+      var addr = IPv6Address.tryParseFromInt(fault);
       expect(addr, null);
     });
 
@@ -137,13 +135,6 @@ void main() {
       var fault = '2001:4860:4860::8888/24';
       expect(
           () => IPv6Address(fault), throwsA(TypeMatcher<AddressValueError>()));
-    });
-
-    test('NG: address is null', () {
-      expect(
-          () => IPv6Address(null), throwsA(TypeMatcher<AddressValueError>()));
-      expect(() => IPv6Address.fromInt(null),
-          throwsA(TypeMatcher<AddressValueError>()));
     });
 
     test('NG: address is minus', () {

@@ -10,7 +10,7 @@ Iterable<BigInt> bigIntRange(BigInt low, BigInt high) sync* {
   }
 }
 
-Iterable<int> stepRange(int a, [int stop, int step]) {
+Iterable<int> stepRange(int a, [int? stop, int? step]) {
   int start;
 
   if (stop == null) {
@@ -30,6 +30,6 @@ Iterable<int> stepRange(int a, [int stop, int step]) {
 
   return start < stop == step > 0
       ? List<int>.generate(
-          ((start - stop) / step).abs().ceil(), (int i) => start + (i * step))
+          ((start - stop) / step).abs().ceil(), (int i) => start + (i * step!))
       : [];
 }

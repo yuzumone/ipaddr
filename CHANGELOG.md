@@ -1,3 +1,6 @@
+## 2.0.0-dev
+- Sound null safety
+
 ## 1.0.1
 - Fix operator
 - Add tryParse

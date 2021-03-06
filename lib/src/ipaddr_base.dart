@@ -5,6 +5,7 @@ import 'package:ipaddr/src/utils.dart';
 
 class _BaseIPAddress extends Object {
   List<String> _splitAddrPrefix(String address) {
+    // ignore: unnecessary_null_comparison
     if (address == null) {
       throw AddressValueError('Address cannot be empty');
     }
@@ -17,7 +18,7 @@ class _BaseIPAddress extends Object {
 }
 
 class _BaseAddress extends _BaseIPAddress {
-  BigInt _ip;
+  late final BigInt _ip;
 
   @override
   bool operator ==(other) =>
@@ -57,8 +58,8 @@ class _BaseAddress extends _BaseIPAddress {
 }
 
 class _BaseNetwork extends _BaseIPAddress {
-  BigInt _ip;
-  int _prefixlen;
+  late BigInt _ip;
+  late final int _prefixlen;
 
   @override
   bool operator ==(other) =>
@@ -197,6 +198,7 @@ mixin _BaseV4 {
   }
 
   int _ipIntFromString(String addr) {
+    // ignore: unnecessary_null_comparison
     if (addr == null) {
       throw AddressValueError('Address cannot be empty');
     }
@@ -295,6 +297,7 @@ mixin _BaseV6 {
   }
 
   BigInt _ipIntFromString(String addr) {
+    // ignore: unnecessary_null_comparison
     if (addr == null) {
       throw AddressValueError('Address cannot be empty');
     }
@@ -368,7 +371,7 @@ mixin _BaseV6 {
         ipInt <<= 16;
         ipInt |= _parseHextet(parts[x]);
       });
-      ipInt <<= 16 * partsSkipped;
+      ipInt <<= 16 * partsSkipped as int;
       range(-partsLo, 0).forEach((x) {
         ipInt <<= 16;
         ipInt |= _parseHextet(parts[parts.length + x]);
@@ -438,6 +441,7 @@ class _BaseIPv6Interface = _BaseAddress with _BaseV6;
 class IPv4Address extends _BaseIPv4Address implements _Address {
   /// Creates a new IPv4Address.
   IPv4Address(String addr) {
+    // ignore: unnecessary_null_comparison
     if (addr == null) {
       throw AddressValueError('Address cannot be empty');
     }
@@ -449,6 +453,7 @@ class IPv4Address extends _BaseIPv4Address implements _Address {
 
   /// Crates a new IPv4Address from integer.
   IPv4Address.fromInt(int addr) {
+    // ignore: unnecessary_null_comparison
     if (addr == null) {
       throw AddressValueError('Address cannot be empty');
     }
@@ -458,7 +463,7 @@ class IPv4Address extends _BaseIPv4Address implements _Address {
 
   /// Create a new IPv4Address.
   /// Like constructor except that this function returns null.
-  static IPv4Address tryParse(String addr) {
+  static IPv4Address? tryParse(String addr) {
     if (addr.isEmpty) return null;
     try {
       return IPv4Address(addr);
@@ -469,7 +474,7 @@ class IPv4Address extends _BaseIPv4Address implements _Address {
 
   /// Create a new IPv4Address from integer.
   /// Like constructor except that this function returns null.
-  static IPv4Address tryParseFromInt(int addr) {
+  static IPv4Address? tryParseFromInt(int addr) {
     try {
       return IPv4Address.fromInt(addr);
     } catch (e) {
@@ -553,7 +558,7 @@ class IPv4Network extends _BaseIPv4Network implements _Network {
 
   /// Creates a new IPv4Network.
   /// Like constructor except that this function returns null.
-  static IPv4Network tryParse(String addr, {bool strict = true}) {
+  static IPv4Network? tryParse(String addr, {bool strict = true}) {
     if (addr.isEmpty) return null;
     try {
       return IPv4Network(addr, strict: strict);
@@ -568,8 +573,8 @@ class IPv4Network extends _BaseIPv4Network implements _Network {
 
 /// A class for representing and manipulating single IPv4 Addresses + Networks.
 class IPv4Interface extends _BaseIPv4Interface implements _Interface {
-  String _address;
-  int _prefixlen;
+  late final String _address;
+  late final int _prefixlen;
   @override
   IPv4Address get ip => IPv4Address.fromInt(_ip.toInt());
   @override
@@ -592,7 +597,7 @@ class IPv4Interface extends _BaseIPv4Interface implements _Interface {
 
   /// Creates a new IPv4Interface.
   /// Like constructor except that this function returns null.
-  static IPv4Interface tryParse(String addr) {
+  static IPv4Interface? tryParse(String addr) {
     if (addr.isEmpty) return null;
     try {
       return IPv4Interface(addr);
@@ -609,6 +614,7 @@ class IPv4Interface extends _BaseIPv4Interface implements _Interface {
 class IPv6Address extends _BaseIPv6Address implements _Address {
   /// Creates a new IPv6Address.
   IPv6Address(String addr) {
+    // ignore: unnecessary_null_comparison
     if (addr == null) {
       throw AddressValueError('Address cannot be empty');
     }
@@ -617,6 +623,7 @@ class IPv6Address extends _BaseIPv6Address implements _Address {
 
   /// Creates a new IPv6Address from BigInt.
   IPv6Address.fromInt(BigInt addr) {
+    // ignore: unnecessary_null_comparison
     if (addr == null) {
       throw AddressValueError('Address cannot be empty');
     }
@@ -626,7 +633,7 @@ class IPv6Address extends _BaseIPv6Address implements _Address {
 
   /// Creates a new IPv6Address.
   /// Like constructor except that this function returns null.
-  static IPv6Address tryParse(String addr) {
+  static IPv6Address? tryParse(String addr) {
     if (addr.isEmpty) return null;
     try {
       return IPv6Address(addr);
@@ -637,7 +644,7 @@ class IPv6Address extends _BaseIPv6Address implements _Address {
 
   /// Creates a new IPv6Address.
   /// Like constructor except that this function returns null.
-  static IPv6Address tryParseFromInt(BigInt addr) {
+  static IPv6Address? tryParseFromInt(BigInt addr) {
     try {
       return IPv6Address.fromInt(addr);
     } catch (e) {
@@ -722,7 +729,7 @@ class IPv6Network extends _BaseIPv6Network implements _Network {
 
   /// Creates a new IPv6Network.
   /// Like constructor except that this function returns null.
-  static IPv6Network tryParse(String addr, {bool strict = true}) {
+  static IPv6Network? tryParse(String addr, {bool strict = true}) {
     if (addr.isEmpty) return null;
     try {
       return IPv6Network(addr, strict: strict);
@@ -737,8 +744,8 @@ class IPv6Network extends _BaseIPv6Network implements _Network {
 
 /// A class for representing and manipulating single IPv6 Addresses + Networks.
 class IPv6Interface extends _BaseIPv6Interface implements _Interface {
-  String _address;
-  int _prefixlen;
+  late final String _address;
+  late final int _prefixlen;
   @override
   IPv6Address get ip => IPv6Address.fromInt(_ip);
   @override
@@ -761,7 +768,7 @@ class IPv6Interface extends _BaseIPv6Interface implements _Interface {
 
   /// Creates a new IPv6Interface.
   /// Like constructor except that this function returns null.
-  static IPv6Interface tryParse(String addr) {
+  static IPv6Interface? tryParse(String addr) {
     if (addr.isEmpty) return null;
     try {
       return IPv6Interface(addr);

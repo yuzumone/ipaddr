@@ -1,4 +1,4 @@
-## 2.0.0-dev
+## 2.0.0
 - Sound null safety
 
 ## 1.0.1

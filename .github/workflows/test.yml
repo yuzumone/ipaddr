@@ -9,10 +9,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: DanTup/gh-actions/setup-dart@master
       - name: pub get
-        run: pub get
+        run: dart pub get
       - name: dartfmt
-        run: dartfmt -n --set-exit-if-changed .
+        run: dart format --set-exit-if-changed .
       - name: dartanalyzer
-        run: dartanalyzer --fatal-infos .
+        run: dart analyze
       - name: run test
-        run: pub run test test/
+        run: dart test

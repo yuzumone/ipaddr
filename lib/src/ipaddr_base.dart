@@ -48,7 +48,7 @@ class _BaseAddress extends _BaseIPAddress {
   bool operator <=(other) =>
       other is _BaseAddress &&
       runtimeType == other.runtimeType &&
-      _ip >= other._ip;
+      _ip <= other._ip;
 
   /// Returns an integer representation of an IP address.
   int toInt() => _ip.toInt();

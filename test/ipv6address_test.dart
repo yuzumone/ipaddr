@@ -107,6 +107,24 @@ void main() {
       expect(IPv6Address('2001:4860:4860::8844') >= Object(), false);
     });
 
+    test('OK: <= operator test', () {
+      expect(
+          IPv6Address('2001:4860:4860::8844') <=
+              IPv6Address('2001:4860:4860::8888'),
+          true);
+    });
+
+    test('OK: <= operator false test', () {
+      expect(
+          IPv6Address('2001:4860:4860::8888') <=
+              IPv6Address('2001:4860:4860::8844'),
+          false);
+    });
+
+    test('OK: <= operator other class false test', () {
+      expect(IPv6Address('2001:4860:4860::8844') <= Object(), false);
+    });
+
     test('OK: plus test', () {
       var ipStr1 = '2001:4860:4860::8888';
       var ipStr2 = '2001:4860:4860::8889';

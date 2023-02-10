@@ -1,6 +1,6 @@
 name: ipaddr
 description: This library is used to create/poke/manipulate IPv4 and IPv6 addresses and networks.
-version: 2.0.1-dev
+version: 2.0.1
 homepage: https://github.com/yuzumone/ipaddr
 
 environment:

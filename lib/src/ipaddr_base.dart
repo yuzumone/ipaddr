@@ -301,19 +301,19 @@ mixin _BaseV6 {
     if (addr == null) {
       throw AddressValueError('Address cannot be empty');
     }
-    var _minParts = 3;
+    var minParts = 3;
     var parts = addr.split(':');
-    if (parts.length < _minParts) {
-      throw AddressValueError('At least $_minParts parts expected in $addr');
+    if (parts.length < minParts) {
+      throw AddressValueError('At least $minParts parts expected in $addr');
     }
 
-    var _maxParts = 9;
-    if (parts.length > _maxParts) {
+    var maxParts = 9;
+    if (parts.length > maxParts) {
       throw AddressValueError(
-          'At most ${_maxParts - 1} colons permitted in $addr');
+          'At most ${maxParts - 1} colons permitted in $addr');
     }
 
-    var skipIndex;
+    int? skipIndex;
     range(1, parts.length - 1).forEach((x) {
       if (parts[x].isEmpty) {
         if (skipIndex != null) {
@@ -323,12 +323,12 @@ mixin _BaseV6 {
       }
     });
 
-    var partsHi;
-    var partsLo;
-    var partsSkipped;
+    int partsHi;
+    int partsLo;
+    int partsSkipped;
     if (skipIndex != null) {
-      partsHi = skipIndex;
-      partsLo = parts.length - skipIndex - 1;
+      partsHi = skipIndex!;
+      partsLo = parts.length - skipIndex! - 1;
       if (parts[0].isEmpty) {
         partsHi -= 1;
         if (partsHi != 0) {
@@ -371,7 +371,7 @@ mixin _BaseV6 {
         ipInt <<= 16;
         ipInt |= _parseHextet(parts[x]);
       });
-      ipInt <<= 16 * partsSkipped as int;
+      ipInt <<= 16 * partsSkipped;
       range(-partsLo, 0).forEach((x) {
         ipInt <<= 16;
         ipInt |= _parseHextet(parts[parts.length + x]);
@@ -396,33 +396,33 @@ mixin _BaseV6 {
   }
 
   List<String> _compressHextets(List<String> hextets) {
-    var best_doublecolon_start = -1;
-    var best_doublecolon_len = 0;
-    var doublecolon_start = -1;
-    var doublecolon_len = 0;
+    var bestDoublecolonStart = -1;
+    var bestDoublecolonLen = 0;
+    var doublecolonStart = -1;
+    var doublecolonLen = 0;
     hextets.asMap().forEach((index, hextet) {
       if (hextet == '0') {
-        doublecolon_len += 1;
-        if (doublecolon_start == -1) {
-          doublecolon_start = index;
+        doublecolonLen += 1;
+        if (doublecolonStart == -1) {
+          doublecolonStart = index;
         }
-        if (doublecolon_len > best_doublecolon_len) {
-          best_doublecolon_len = doublecolon_len;
-          best_doublecolon_start = doublecolon_start;
+        if (doublecolonLen > bestDoublecolonLen) {
+          bestDoublecolonLen = doublecolonLen;
+          bestDoublecolonStart = doublecolonStart;
         }
       } else {
-        doublecolon_len = 0;
-        doublecolon_start = -1;
+        doublecolonLen = 0;
+        doublecolonStart = -1;
       }
     });
-    if (best_doublecolon_len > 1) {
-      var best_doublecolon_end = best_doublecolon_start + best_doublecolon_len;
-      if (best_doublecolon_end == hextets.length) {
+    if (bestDoublecolonLen > 1) {
+      var bestDoublecolonEnd = bestDoublecolonStart + bestDoublecolonLen;
+      if (bestDoublecolonEnd == hextets.length) {
         hextets += [''];
       }
-      hextets.removeRange(best_doublecolon_start, best_doublecolon_end);
-      hextets.insert(best_doublecolon_start, '');
-      if (best_doublecolon_start == 0) {
+      hextets.removeRange(bestDoublecolonStart, bestDoublecolonEnd);
+      hextets.insert(bestDoublecolonStart, '');
+      if (bestDoublecolonStart == 0) {
         hextets = [''] + hextets;
       }
     }

@@ -1,3 +1,6 @@
+## 2.1.0
+- Bump SDK constraint to 4.0.0
+
 ## 2.0.1
 - Fix <= operator
 

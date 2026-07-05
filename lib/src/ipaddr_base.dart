@@ -30,22 +30,22 @@ class _BaseAddress extends _BaseIPAddress {
   @override
   int get hashCode => _ip.hashCode;
 
-  bool operator >(other) =>
+  bool operator >(Object other) =>
       other is _BaseAddress &&
       runtimeType == other.runtimeType &&
       _ip > other._ip;
 
-  bool operator <(other) =>
+  bool operator <(Object other) =>
       other is _BaseAddress &&
       runtimeType == other.runtimeType &&
       _ip < other._ip;
 
-  bool operator >=(other) =>
+  bool operator >=(Object other) =>
       other is _BaseAddress &&
       runtimeType == other.runtimeType &&
       _ip >= other._ip;
 
-  bool operator <=(other) =>
+  bool operator <=(Object other) =>
       other is _BaseAddress &&
       runtimeType == other.runtimeType &&
       _ip <= other._ip;
@@ -78,10 +78,10 @@ abstract class _Address {
   String toString();
 
   /// Addition operator.
-  _BaseAddress operator +(other);
+  _BaseAddress operator +(Object other);
 
   /// Subtraction operator.
-  _BaseAddress operator -(other);
+  _BaseAddress operator -(Object other);
 }
 
 abstract class _Network {
@@ -107,7 +107,7 @@ abstract class _Network {
   int get prefixlen;
 
   /// The total number of addresses in the network.
-  dynamic get numAddresses;
+  Object get numAddresses;
 
   /// A string resresentation of the netwrok, with the mask in prefix length.
   String get withPrefixlen;

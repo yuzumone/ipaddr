@@ -55,6 +55,16 @@ void main() {
       expect(network.numAddresses, 4);
     });
 
+    test('OK: prefix length is zero', () {
+      var network = IPv4Network('0.0.0.0/0');
+      expect(network.networkAddress, IPv4Address('0.0.0.0'));
+      expect(network.broadcastAddress, IPv4Address('255.255.255.255'));
+      expect(network.prefixlen, 0);
+      expect(network.netmask, IPv4Address('0.0.0.0'));
+      expect(network.hostmask, IPv4Address('255.255.255.255'));
+      expect(network.numAddresses, 4294967296);
+    });
+
     test('OK: tryParse', () {
       var ip = '192.168.10.0/30';
       var network = IPv4Network.tryParse(ip);
@@ -112,6 +122,11 @@ void main() {
       var fault = '192.168.10.10/33';
       expect(
           () => IPv4Network(fault), throwsA(TypeMatcher<NetmaskValueError>()));
+    });
+
+    test('NG: negative prefix length', () {
+      expect(() => IPv4Network('0.0.0.0/-1'),
+          throwsA(TypeMatcher<NetmaskValueError>()));
     });
 
     test('NG: fault string subnet', () {

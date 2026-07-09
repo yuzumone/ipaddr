@@ -161,7 +161,7 @@ mixin _BaseV4 {
   int _makePrefix(String arg) {
     var prefix = int.tryParse(arg);
     if (prefix != null) {
-      if (0 >= prefix || prefix > maxPrefixlen) {
+      if (prefix < 0 || prefix > maxPrefixlen) {
         throw NetmaskValueError('$prefix');
       }
       return prefix;
@@ -277,7 +277,7 @@ mixin _BaseV6 {
   int _makePrefix(String arg) {
     var prefix = int.tryParse(arg);
     if (prefix != null) {
-      if (0 >= prefix || prefix > maxPrefixlen) {
+      if (prefix < 0 || prefix > maxPrefixlen) {
         throw NetmaskValueError('$prefix');
       }
       return prefix;

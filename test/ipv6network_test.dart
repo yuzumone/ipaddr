@@ -33,6 +33,18 @@ void main() {
       expect(network.numAddresses, BigInt.from(4));
     });
 
+    test('OK: prefix length is zero', () {
+      var network = IPv6Network('::/0');
+      expect(network.networkAddress, IPv6Address('::'));
+      expect(network.broadcastAddress,
+          IPv6Address('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'));
+      expect(network.prefixlen, 0);
+      expect(network.netmask, IPv6Address('::'));
+      expect(network.hostmask,
+          IPv6Address('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'));
+      expect(network.numAddresses, BigInt.one << 128);
+    });
+
     test('OK: tryParse', () {
       var ip = 'dead:beef::/126';
       var network = IPv6Network.tryParse(ip);
@@ -90,6 +102,11 @@ void main() {
       var fault = 'dead:beef::/130';
       expect(
           () => IPv6Network(fault), throwsA(TypeMatcher<NetmaskValueError>()));
+    });
+
+    test('NG: negative prefix length', () {
+      expect(() => IPv6Network('::/-1'),
+          throwsA(TypeMatcher<NetmaskValueError>()));
     });
   });
 }

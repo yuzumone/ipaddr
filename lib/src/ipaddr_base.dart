@@ -523,12 +523,12 @@ class IPv4Network extends _BaseIPv4Network implements _Network {
   Iterable<IPv4Address> get hosts =>
       range(networkAddress.toInt() + 1, broadcastAddress.toInt()).map((x) {
         return IPv4Address.fromInt(x);
-      }).toList();
+      });
   @override
   Iterable<IPv4Address> get addresses =>
       range(networkAddress.toInt(), broadcastAddress.toInt() + 1).map((x) {
         return IPv4Address.fromInt(x);
-      }).toList();
+      });
   @override
   int get prefixlen => _prefixlen;
   @override
@@ -692,13 +692,11 @@ class IPv6Network extends _BaseIPv6Network implements _Network {
   @override
   Iterable<IPv6Address> get hosts => bigIntRange(
           networkAddress.toBigInt() + BigInt.one, broadcastAddress.toBigInt())
-      .map((x) => IPv6Address.fromInt(x))
-      .toList();
+      .map((x) => IPv6Address.fromInt(x));
   @override
   Iterable<IPv6Address> get addresses => bigIntRange(
           networkAddress.toBigInt(), broadcastAddress.toBigInt() + BigInt.one)
-      .map((x) => IPv6Address.fromInt(x))
-      .toList();
+      .map((x) => IPv6Address.fromInt(x));
   @override
   int get prefixlen => _prefixlen;
   @override

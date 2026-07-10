@@ -45,6 +45,12 @@ void main() {
       expect(network.numAddresses, BigInt.one << 128);
     });
 
+    test('OK: addresses and hosts are lazy', () {
+      var network = IPv6Network('::/0');
+      expect(network.addresses.take(1), [IPv6Address('::')]);
+      expect(network.hosts.take(1), [IPv6Address('::1')]);
+    });
+
     test('OK: tryParse', () {
       var ip = 'dead:beef::/126';
       var network = IPv6Network.tryParse(ip);

@@ -65,6 +65,12 @@ void main() {
       expect(network.numAddresses, 4294967296);
     });
 
+    test('OK: addresses and hosts are lazy', () {
+      var network = IPv4Network('0.0.0.0/0');
+      expect(network.addresses.take(1), [IPv4Address('0.0.0.0')]);
+      expect(network.hosts.take(1), [IPv4Address('0.0.0.1')]);
+    });
+
     test('OK: tryParse', () {
       var ip = '192.168.10.0/30';
       var network = IPv4Network.tryParse(ip);

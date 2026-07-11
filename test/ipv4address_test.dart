@@ -149,6 +149,11 @@ void main() {
       expect(() => IPv4Address(fault), throwsA(TypeMatcher<ValueError>()));
     });
 
+    test('NG: address negative octet', () {
+      var fault = '-1.0.0.0';
+      expect(() => IPv4Address(fault), throwsA(TypeMatcher<ValueError>()));
+    });
+
     test('NG: plus over 4294967295', () {
       var addr = IPv4Address('255.255.255.255');
       expect(() => addr + 100, throwsA(TypeMatcher<AddressValueError>()));

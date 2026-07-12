@@ -50,6 +50,13 @@ void main() {
           true);
     });
 
+    test('OK: not equal with different prefixlen', () {
+      var interface1 = IPv6Interface('2001:4860:4860::8888/64');
+      var interface2 = IPv6Interface('2001:4860:4860::8888/126');
+      expect(interface1 == interface2, false);
+      expect(interface1.hashCode == interface2.hashCode, false);
+    });
+
     test('OK: not equal false test', () {
       var ipStr = '2001:4860:4860::8888/126';
       expect(IPv6Interface(ipStr) != IPv6Interface(ipStr), false);

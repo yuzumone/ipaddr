@@ -179,6 +179,12 @@ void main() {
           () => IPv6Address(fault), throwsA(TypeMatcher<AddressValueError>()));
     });
 
+    test('NG: address negative hextet', () {
+      var fault = '-1::';
+      expect(
+          () => IPv6Address(fault), throwsA(TypeMatcher<AddressValueError>()));
+    });
+
     test('NG: address min parts', () {
       var fault = '2001:4860';
       expect(

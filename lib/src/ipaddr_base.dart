@@ -189,7 +189,7 @@ mixin _BaseV4 {
         throw ValueError('At most 3 characters permitted in $x');
       }
       var octetInt = int.tryParse(x);
-      if (octetInt == null || octetInt > 255) {
+      if (octetInt == null || octetInt < 0 || octetInt > 255) {
         throw ValueError('Octet $octetInt (> 255) not permitted');
       }
       return octetInt;
@@ -290,7 +290,7 @@ mixin _BaseV6 {
       throw ValueError('At most 4 characters permitted in $hextetStr');
     }
     var result = int.tryParse(hextetStr, radix: 16);
-    if (result == null) {
+    if (result == null || result < 0) {
       throw ValueError('Only hex digits permitted in $hextetStr');
     }
     return BigInt.from(result);

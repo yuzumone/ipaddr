@@ -587,6 +587,16 @@ class IPv4Interface extends _BaseIPv4Interface implements _Interface {
   @override
   String get withPrefixlen => '$ip/$_prefixlen';
 
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      other is IPv4Interface &&
+          _ip == other._ip &&
+          _prefixlen == other._prefixlen;
+
+  @override
+  int get hashCode => _ip.hashCode ^ _prefixlen;
+
   /// Creates a new IPv4Interface.
   IPv4Interface(String addr) {
     var ap = _splitAddrPrefix(addr);
@@ -755,6 +765,16 @@ class IPv6Interface extends _BaseIPv6Interface implements _Interface {
   String get withNetmask => '$ip/${network.netmask}';
   @override
   String get withPrefixlen => '$ip/$_prefixlen';
+
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      other is IPv6Interface &&
+          _ip == other._ip &&
+          _prefixlen == other._prefixlen;
+
+  @override
+  int get hashCode => _ip.hashCode ^ _prefixlen;
 
   /// Creates a new IPv6Interface.
   IPv6Interface(String addr) {

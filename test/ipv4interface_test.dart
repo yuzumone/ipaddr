@@ -48,6 +48,13 @@ void main() {
           true);
     });
 
+    test('OK: not equal with different prefixlen', () {
+      var interface1 = IPv4Interface('192.168.10.0/24');
+      var interface2 = IPv4Interface('192.168.10.0/30');
+      expect(interface1 == interface2, false);
+      expect(interface1.hashCode == interface2.hashCode, false);
+    });
+
     test('OK: not equal false test', () {
       var ipStr = '192.168.10.10/30';
       expect(IPv4Interface(ipStr) != IPv4Interface(ipStr), false);

@@ -1,3 +1,9 @@
+## 2.1.1
+- Support zero-length (`/0`) network prefixes.
+- Make IPv4 and IPv6 network address and host iteration lazy.
+- Reject negative IPv4 octets and IPv6 hextets during parsing.
+- Include prefix length in IPv4 and IPv6 interface equality and hash codes.
+
 ## 2.1.0
 - Bump SDK constraint to 4.0.0
 
